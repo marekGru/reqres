@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="b7000c42-0b95-41ee-971c-d4b70f7f92df" activeEnvironment="Default" name="REST Project 1" resourceRoot="" soapui-version="5.7.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:RestService" id="f1551b87-e423-461f-ab4b-8a7da2554253" wadlVersion="http://wadl.dev.java.net/2009/02" name="https://reqres.in" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart=""/><con:endpoints><con:endpoint>https://reqres.in</con:endpoint></con:endpoints><con:resource name="" path="/api/users" id="b6f5253e-e5a2-4130-84da-dd99d7d30835"><con:settings/><con:parameters/><con:method name="1" id="a5120d47-d6dd-4258-9009-81cfb186aee3" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:user="https://reqres.in/api/users">user:Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=utf-8</con:mediaType><con:status>404</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>404</con:status><con:params/><con:element>Fault</con:element></con:representation><con:request name="Request 1" id="5e8a4631-3074-435e-a40e-eebc3d773d2d" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://reqres.in</con:endpoint><con:request/><con:originalUri>https://reqres.in/api/users</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:resource name="users" path="/api/users" id="e7f27188-872e-476a-91ad-a722d95e9ce6"><con:settings/><con:parameters/><con:method name="Method 1" id="a0fd0e38-3ed0-4e6c-9199-134ab957e1ed" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>201</con:status><con:params/><con:element xmlns:user="https://reqres.in/api/users">user:Response</con:element></con:representation><con:request name="Request 1" id="c1ef17d1-6450-4162-9b75-537af0bdd917" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://reqres.in</con:endpoint><con:request/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:interface><con:testSuite id="35cddbc3-8e03-4ea6-b00c-b3633e60f2d9" name="testSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="20a9f7ea-3a2e-4e66-acde-a54d664fd6d5" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="getUsers" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="getUsers" id="0b353382-9433-4d61-8b8d-f711c13187d7"><con:settings/><con:config service="https://reqres.in" resourcePath="/api/users" methodName="1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="getUsers" id="5e8a4631-3074-435e-a40e-eebc3d773d2d" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://reqres.in</con:endpoint><con:request/><con:originalUri>https://reqres.in/api/users</con:originalUri><con:assertion type="GroovyScriptAssertion" id="b043df67-8d45-41ec-a880-f0525aa139c3" name="Script Assertion"><con:configuration><scriptText>import groovy.json.JsonSlurper
+def response = messageExchange.response.responseContent
+def json = new JsonSlurper().parseText(response)
+
+assert json.total
+assert json.data[0].last_name == "Bluth"
+assert json.data[1].last_name == "Weaver"
+
+Integer numberUsers = json.data.size()
+Integer total = json.total
+
+compare = total - numberUsers
+assert compare > 0
+
+</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:properties/></con:testCase><con:testCase id="c151bedb-77aa-4fba-b8a3-034a2e025f8e" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="postUser" searchProperties="true"><con:settings/><con:testStep type="groovy" name="Groovy Script" id="5b8efeef-1566-4c82-9be6-3f5cc4be584c"><con:settings/><con:config><script>import java.util.*
+import org.apache.commons.lang.RandomStringUtils
+
+String name = RandomStringUtils.randomAlphabetic(10);
+String job = RandomStringUtils.randomAlphabetic(10);
+
+testRunner.testCase.testSteps['Properties'].setPropertyValue("name", name)
+testRunner.testCase.testSteps['Properties'].setPropertyValue("job", job)</script></con:config></con:testStep><con:testStep type="properties" name="Properties" id="aa07d064-e10a-4a73-bae4-19282ac64b26"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>name</con:name><con:value>ncnYuqmQvq</con:value></con:property><con:property><con:name>job</con:name><con:value>CxZwUzzQuc</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="restrequest" name="post" id="23d8e07a-0fb5-467d-b4da-d82726bd07c9"><con:settings/><con:config service="https://reqres.in" resourcePath="/api/users" methodName="Method 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="Method 1 - Request 1" id="c1ef17d1-6450-4162-9b75-537af0bdd917" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://reqres.in</con:endpoint><con:request>{
+    "name": "${Properties#name}",
+    "job": "${Properties#job}"
+}</con:request><con:originalUri>https://reqres.in/api/users</con:originalUri><con:assertion type="GroovyScriptAssertion" id="349ddffc-805a-4759-ae9c-f865cd209045" name="Script Assertion"><con:configuration><scriptText>import groovy.json.JsonSlurper
+
+def headers = messageExchange.response.responseHeaders
+def responseJson = messageExchange.response.responseContent
+def json = new JsonSlurper().parseText(responseJson)
+
+def expectedHTTPResponse = ['HTTP/1.1 201 Created']
+def actualHTTPResponse = headers['#status#']
+
+def name = context.expand('${Properties#name}')
+def job = context.expand('${Properties#job}')
+
+assert expectedHTTPResponse == actualHTTPResponse
+assert json.name == name
+assert json.job == job
+
+
+
+</scriptText></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:restRequest></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/></con:soapui-project>
